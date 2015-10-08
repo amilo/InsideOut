@@ -1,8 +1,9 @@
+
 //import Minim library
-  import ddf.minim.*;
-  import ddf.minim.UGen;
+import ddf.minim.*;
+import ddf.minim.UGen;
   
-  import peasy.test.*;
+import peasy.test.*;
 import peasy.org.apache.commons.math.*;
 import peasy.*;
 import peasy.org.apache.commons.math.geometry.*;
@@ -11,9 +12,18 @@ import peasy.org.apache.commons.math.geometry.*;
   import ddf.minim.analysis.*;
   import ddf.minim.ugens.*;
 
-//import codeanticode.gsvideo.*;
 
-//GSMovieMaker mm;
+/**
+  * InsideOut - visualScape for audio content - 
+  * first developed during Summer2014 -
+  * new version for Autumn2015 - Arno Babajanian concert
+  * at Queen Mary University of London for InsideOut event
+  *@author     Alessia Milo  contact@alessiamilo.com
+  *@version    1.1
+  *@since      Summer 2014
+  */
+
+
 //int fps = 30;
 PeasyCam cam;
   Minim minim;
@@ -38,8 +48,7 @@ PeasyCam cam;
   AudioPlayer song;
    //to make it "hear" audio input
   //AudioInput in;
-  AudioOutput out;
-  AudioRecorder recorder;
+
   float sum=-5000000;
   
 //for displaying the sound's frequency
@@ -67,19 +76,9 @@ void setup() {
   //drag the file into your sketch window
   //and replace "mysong.mp3" with the file name
   //in = minim.getLineIn(Minim.STEREO, 2048);
-    //song = minim.loadFile("Impro1.mp3", 2048);
-     //song = minim.loadFile("04-150925_1229.wav", 2048);
+
  song = minim.loadFile("TEST.wav", 2048);
  
-      // use the getLineOut method of the Minim object to get an AudioOutput object
-  //out = minim.getLineOut();
-//String num = str(int(random(1,1000)));
-//String name = "1_" + num + "out.wav";
-//recorder = minim.createRecorder(in, name);
-  
-  // when providing an Instrument, we always specify start time and duration
-  //out.playNote( 0.0, 0.9, new SineInstrument( 97.99 ) );
-  //out.playNote( 1.0, 0.9, new SineInstrument( 123.47 ) );
 
     song.play();
   
@@ -93,7 +92,7 @@ void setup() {
     fft = new FFT(song.bufferSize(), song.sampleRate());
     //count=0;
   
-    values= new int[16];
+    //values= new int[16];
     
 }
  
@@ -175,7 +174,7 @@ pushMatrix();
               //in.left.get(i)*50+yD/3+5, in.right.get(i)*50+yD/3+5);
         // y/48, y*2);
               
-              shape(x, y);
+              shape(x, y, i, leftShift, rightShift, yD);
               
       //stroke(255, 80);
       
@@ -278,7 +277,9 @@ void keyPressed() {
   }
 }
 
-void shape(float x, float y) {
+void shape(float x, float y, int i, float leftShift, float rightShift, float yD) {
+  
+
   switch(mode){
  
     case 0: 
@@ -320,13 +321,17 @@ void shape(float x, float y) {
     case 5:
     
      noFill();
-    stroke(255,128);
+    //stroke(255,10);
+    
+     stroke (int(map ((log2(fft.indexToFreq(i)/55)*100)%100,0,100,0,255))+leftShift+rightShift,    yD/2,   leftShift+rightShift+int(map ((log2(fft.indexToFreq(i))),0,14,20,255))+yD,10+yD);
     pushMatrix();
     rotateX(PI/2);
     //rotateY(PI/2);
+    rotateZ(PI/2);
     //rect(x,  height-int(y), y/12, y*2);  
    
-     arc(x, height-int(y), x + y/12, y+y*2, 0, PI, OPEN);
+     //arc(x, height-int(y), x + y/12, y+y*2, 0, PI*y/150, OPEN);
+     arc(x, height-int(y), x + y/12, y+y*2, 0, PI*y/150, CLOSE);
      popMatrix();
     
     break;  
